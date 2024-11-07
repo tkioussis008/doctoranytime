@@ -10,9 +10,8 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 
 
 <template>
-  <div class="home">
-    <div class="md:mx-auto max-w-3xl max-w-3xl flex flex-col h-screen justify-center items-center max-[767px]:mx-5 mb-60">
-      <img src="@/assets/images/MindTime-logo.png" class="max-w-44 mb-8" alt="MindTime" />
+  <div class="questions">
+    
       <img src="@/assets/images/central-image.png" class="md:max-w-xl max-w-sm mb-8" alt="MindTime Central Image" />
       
         <div class="space-y-6 py-8 text-base text-gray-500 leading-7 text-center">
@@ -44,11 +43,7 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
         </div>
       
     </div>
-    <div class="flex sm:flex-row flex-col sticky absolute bottom-0 border-t divide-gray-300/50 p-2 justify-center bg-white max-[767px]:px-5">
-      <button class="bg-red-500 mb-2 py-3 px-5 rounded hover:text-red-500 hover:bg-white hover:ring-red-500 hover:ring-1 text-white sm:mx-5 sm:order-last">Start questionnaire</button>
-      <button class="py-3 px-5 mb-2 hover:ring-1 hover:ring-red-500 hover:text-red-500 mx-5 rounded">Skip for now</button>
-      
-    </div>
-  </div>
+    
+  
 </template>
 

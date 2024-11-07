@@ -24,7 +24,7 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     })
 
     const finalUrl = computed(() => {
-      const baseUrl = "/s/Psychologos?"
+      const baseUrl = "https://www.doctoranytime.gr/s/Psychologos?"
       const queryParams = userAnswers.value.reduce((acc: Record<string, string>, answer) => {
         const key = answer.FilterQueryStringKey
         const value = answer.FilterQueryStringValue
@@ -53,8 +53,9 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
         const response = await fetch("/searchq/GetQuestions?version=v2")
         const data: QuestionsResponse = await response.json()
         questions.value = data.Data
-        currentQuestionId.value = data.Data.find(q => q.Id === 1000)?.Id || data.Data[0]?.Id // Start with first question
-        console.log(willAllBranchesLeadToUrl(currentQuestionId.value)) // Call path builder after fetching questions
+        if(!currentQuestionId.value)
+          currentQuestionId.value = data.Data.find(q => q.Id === 1000)?.Id || data.Data[0]?.Id
+        console.log(willAllBranchesLeadToUrl(currentQuestionId.value))
       } catch (err) {
         error.value = "Failed to fetch questions. Please try again."
       } finally {
@@ -99,7 +100,13 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
       return true
     };
 
-    const goToNextQuestion = (selectedOption: Option) => {
+    const goToNextQuestionOrComplete = (selectedOption: Option | null) => {
+      console.log('CALL', selectedOption)
+      if(!selectedOption) return
+      if(selectedOption.Action === "GoToUrl") {
+        GoToComponent(3);
+        return
+      }
       userAnswers.value.push(selectedOption)
       const nextQuestion = questions.value.find(q => q.Id === selectedOption.GoToQuestionId)
       if (nextQuestion) {
@@ -112,9 +119,13 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     }
 
     const goToPreviousQuestion = () => {
-      userAnswers.value.pop()
-      const previousAnswer = userAnswers.value[userAnswers.value.length - 1]
-      currentQuestionId.value = previousAnswer?.GoToQuestionId || 1000 // Default to 1000 if previousAnswer is undefined
+      if(userAnswers.value.length === 0) {
+        GoToComponent(1);
+      } else {
+        userAnswers.value.pop()
+        const previousAnswer = userAnswers.value[userAnswers.value.length - 1]
+        currentQuestionId.value = previousAnswer?.GoToQuestionId || 1000 // Default to 1000 if previousAnswer is undefined
+      }
     }
 
     const resetQuestionnaire = () => {
@@ -133,7 +144,7 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
       progress,
       finalUrl,
       fetchQuestions,
-      goToNextQuestion,
+      goToNextQuestionOrComplete,
       goToPreviousQuestion,
       resetQuestionnaire,
       GoToComponent,

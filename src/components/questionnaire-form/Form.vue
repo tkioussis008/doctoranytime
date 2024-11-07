@@ -15,7 +15,7 @@ onMounted(() => {
 
 
 <template>
-  <div>
-    <Question :question="question" :key="question" v-for="question of store.questions"/>
+  <div class="space-y-6 py-8 text-base text-gray-500 leading-7 text-center">
+    <Question :question="store.questions.find(q => q.Id === store.currentQuestionId)" :key="store.currentQuestionId"/>
   </div>
 </template>

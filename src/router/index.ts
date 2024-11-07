@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue';
+import QuestionnaireLayout from '@/layouts/QuestionnaireLayout.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,7 +18,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/questionnaire',
     name: 'questionnaire',
-    meta: { layout: MainLayout },
+    meta: { layout: QuestionnaireLayout },
     component: () => import('../pages/Questionnaire.vue'),
   },
 ]

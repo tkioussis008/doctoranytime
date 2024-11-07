@@ -5,7 +5,5 @@ import Steps from '@/components/questionnaire-form/Steps.vue';
 
 
 <template>
-  <div class="questionnaire">
-    <Steps/>
-  </div>
+  <Steps/>
 </template>

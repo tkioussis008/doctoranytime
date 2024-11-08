@@ -10,12 +10,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../pages/Home.vue'),
   },
   {
-    path: '/about',
-    name: 'about',
-    meta: { layout: MainLayout },
-    component: () => import('../pages/About.vue')
-  },
-  {
     path: '/questionnaire',
     name: 'questionnaire',
     meta: { layout: QuestionnaireLayout },

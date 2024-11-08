@@ -43,18 +43,19 @@ const handleOption = (answerId: number) => {
 
 
 <template>
-  <div class="m-20">
-    <span :key="question">{{ question.Question }}</span>
+  <div>
+    <span class="flex mb-10 font-bold">{{ question.Question }}</span>
     <div v-if="question.QuestionSelectType === 0">
       <el-checkbox-group 
         @update:model-value="handleCheckbox($event)"
         v-model="checkboxGroup"
         size="large"
+        class="w-full m-0"
       >
         <el-checkbox
           v-for="option in question.Options"
           :class="[
-            'w-full mb-2 px-4 py-2 rounded-md',
+            'w-full mb-2 px-4 py-2 rounded-md whitespace-normal break-words max-w-full',
             checkboxGroup.includes(option.AnswerId) ? 'bg-blue-50' : ''
           ]"
           class="w-full mb-2 px-4 py-2 rounded-md"
@@ -71,12 +72,13 @@ const handleOption = (answerId: number) => {
         @update:model-value="handleOption($event)"
         v-model="optionGroup"
         size="large"
+        class="w-full m-0"
       >
         <el-radio
           v-for="option in question.Options"
           :class="[
-            'w-full mb-2 px-4 py-2 rounded-md',
-            checkboxGroup.includes(option.AnswerId) ? 'bg-blue-50' : ''
+            'w-full mb-2 px-4 py-2 rounded-md whitespace-normal break-words max-w-full',
+            optionGroup === option.AnswerId ? 'bg-blue-50' : ''
           ]"
           :key="option.AnswerId"
           :label="option.Answer"
@@ -90,3 +92,10 @@ const handleOption = (answerId: number) => {
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.el-radio__label, .el-checkbox__label {
+  word-wrap: break-word;   
+  white-space: normal !important;
+}
+</style>

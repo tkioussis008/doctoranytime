@@ -16,11 +16,12 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     const memoizedResults = new Map<number, boolean>()
 
 
-
     const progress = computed(() => {
-      return questions.value.length
-        ? (userAnswers.value.length / questions.value.length) * 100
-        : 0
+      return component.value !== 3 ? 
+        questions.value.length
+          ? (userAnswers.value.length / questions.value.length) * 100
+          : 0
+        : 100
     })
 
     const finalUrl = computed(() => {
@@ -45,6 +46,7 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
 
       return baseUrl + queryString
     })
+
 
     const fetchQuestions = async () => {
       loading.value = true
@@ -98,24 +100,22 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     
       memoizedResults.set(questionId, true)
       return true
-    };
+    }
+
+    const GoToComponent = (componentId: number) => {
+      component.value = componentId;
+    }
 
     const goToNextQuestionOrComplete = (selectedOption: Option | null) => {
-      console.log('CALL', selectedOption)
       if(!selectedOption) return
-      if(selectedOption.Action === "GoToUrl") {
-        GoToComponent(3);
-        return
-      }
       userAnswers.value.push(selectedOption)
       const nextQuestion = questions.value.find(q => q.Id === selectedOption.GoToQuestionId)
       if (nextQuestion) {
         currentQuestionId.value = nextQuestion.Id
       }
-    }
-
-    const GoToComponent = (componentId: number) => {
-      component.value = componentId;
+      if(selectedOption.Action === "GoToUrl") {
+        GoToComponent(3);
+      }
     }
 
     const goToPreviousQuestion = () => {
@@ -124,13 +124,13 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
       } else {
         userAnswers.value.pop()
         const previousAnswer = userAnswers.value[userAnswers.value.length - 1]
-        currentQuestionId.value = previousAnswer?.GoToQuestionId || 1000 // Default to 1000 if previousAnswer is undefined
+        currentQuestionId.value = previousAnswer?.GoToQuestionId || 1000
       }
     }
 
     const resetQuestionnaire = () => {
       userAnswers.value = []
-      currentQuestionId.value = questions.value.length ? questions.value[0].Id : null
+      currentQuestionId.value = questions.value.length ? questions.value[0].Id : 1000
     }
 
 

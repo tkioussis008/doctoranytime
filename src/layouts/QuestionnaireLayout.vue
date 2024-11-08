@@ -1,18 +1,18 @@
 <script setup lang="ts">
-//import MainLayout from '@/layouts/MainLayout.vue';
-import { onMounted, onBeforeUnmount } from 'vue';
-import ProgressBar from '@/components/questionnaire-form/ProgressBar.vue';
-import Actions from '@/components/questionnaire-form/Actions.vue';
+//import MainLayout from '@/layouts/MainLayout.vue'
+import { onMounted, onBeforeUnmount } from 'vue'
+import ProgressBar from '@/components/questionnaire-form/ProgressBar.vue'
+import Actions from '@/components/questionnaire-form/Actions.vue'
 
 
 onMounted(() => {
-  document.body.classList.add('h-full');
-  document.body.classList.add('m-0');
+  document.body.classList.add('h-full')
+  document.body.classList.add('m-0')
 });
 
 onBeforeUnmount(() => {
-  document.body.classList.add('h-full');
-  document.body.classList.add('m-0');
+  document.body.classList.add('h-full')
+  document.body.classList.add('m-0')
 });
 </script>
 

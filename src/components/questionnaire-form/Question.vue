@@ -5,7 +5,7 @@ import type { Question } from '@/store/types'
 import { useQuestionnaireStore } from '@/store/questionnaire'
 
 
-const store = useQuestionnaireStore();
+const store = useQuestionnaireStore()
 
 
 const props = defineProps({
@@ -13,7 +13,7 @@ const props = defineProps({
     type: Object as () => Question,
     default: ''
   },
-});
+})
 
 
 const checkboxGroup = ref<number[]>([])

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import Question from './Question.vue';
-import { useQuestionnaireStore } from '@/store/questionnaire';
-import { onMounted } from 'vue';
+import Question from './Question.vue'
+import { useQuestionnaireStore } from '@/store/questionnaire'
+import { onMounted } from 'vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 
 const store = useQuestionnaireStore();

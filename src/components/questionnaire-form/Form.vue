@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import Question from './Question.vue';
-import { useQuestionnaireStore } from '@/store/questionnaire';
-import { onMounted } from 'vue';
+import Question from './Question.vue'
+import { useQuestionnaireStore } from '@/store/questionnaire'
+import { onMounted } from 'vue'
 
-const store = useQuestionnaireStore();
+const store = useQuestionnaireStore()
 
 
 onMounted(() => {

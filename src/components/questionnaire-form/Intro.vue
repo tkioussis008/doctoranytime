@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { watch } from 'vue';
+import { ref } from "vue"
+import { watch } from 'vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons'
 
 
 </script>

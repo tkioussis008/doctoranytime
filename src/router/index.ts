@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import MainLayout from '@/layouts/MainLayout.vue';
-import QuestionnaireLayout from '@/layouts/QuestionnaireLayout.vue';
+import MainLayout from '@/layouts/MainLayout.vue'
+import QuestionnaireLayout from '@/layouts/QuestionnaireLayout.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {

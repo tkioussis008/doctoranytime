@@ -1,14 +1,14 @@
  
 <script setup lang="ts">
-import { ref } from "vue";
-import { defineProps } from 'vue';
+import { ref } from "vue"
+import { defineProps } from 'vue'
 import { ElMessageBox } from 'element-plus'
-import { useQuestionnaireStore } from '@/store/questionnaire';
+import { useQuestionnaireStore } from '@/store/questionnaire'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-const store = useQuestionnaireStore();
+const store = useQuestionnaireStore()
 
 
 const handleReset = () => {
@@ -22,7 +22,7 @@ const handleReset = () => {
     store.GoToComponent(1)
   })
   .catch(() => {
-  });
+  })
 };
 
 </script>

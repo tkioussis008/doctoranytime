@@ -20,8 +20,8 @@ const store = useQuestionnaireStore();
       <button @click="$router.push('/')" class="py-3 px-5 mb-2 hover:ring-1 hover:ring-red-500 hover:text-red-500 mx-5 rounded">Skip for now</button>
     </div>
     <div class="min-[767px]:mr-16" v-else>
-      <button @click="store.goToPreviousQuestion()" class="py-3 px-5 mb-2 hover:ring-1 hover:ring-blue-500 hover:text-blue-500 mx-5 rounded"><FontAwesomeIcon class="cursor-pointer" :icon="faArrowLeft" /></button>
-      <button @click="store.goToNextQuestionOrComplete()" class="bg-blue-500 mb-2 py-3 px-5 rounded hover:text-blue-500 hover:bg-white hover:ring-blue-500 hover:ring-1 text-white sm:mx-5 sm:order-last max-[767px]:w-3/4">Continue</button>
+      <button @click="store.goToPreviousQuestion()" class="py-3 px-5 mb-2 hover:ring-1 hover:ring-sky-500 hover:text-sky-500 mx-5 rounded"><FontAwesomeIcon class="cursor-pointer" :icon="faArrowLeft" /></button>
+      <button @click="store.goToNextQuestionOrComplete()" class="bg-sky-500 mb-2 py-3 px-5 rounded hover:text-sky-500 hover:bg-white hover:ring-sky-500 hover:ring-1 text-white sm:mx-5 sm:order-last max-[767px]:w-3/4">Continue</button>
     </div>
   </div>
 </template>

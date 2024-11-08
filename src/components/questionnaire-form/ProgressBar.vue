@@ -32,7 +32,7 @@ const handleReset = () => {
   <div v-if="store.component !== 1" class="absolute pl-5 pr-5 pt-2 flex items-center justify-center w-full h-10 bg-gray-200">
     <div class="w-full h-1.5 bg-gray-200 rounded-md overflow-hidden">
       <div 
-        class="h-full bg-blue-600 transition-all duration-300" 
+        class="h-full bg-sky-600 transition-all duration-300" 
         :style="{ width: `${store.progress}%` }"
       ></div>
       

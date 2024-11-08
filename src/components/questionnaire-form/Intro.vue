@@ -26,15 +26,15 @@ import { faClock } from '@fortawesome/free-regular-svg-icons'
               <h5 class="font-semibold pb-4">How It Works</h5>
               <ol class="space-y-3 text-sm list-outside list-decimal">
                 <li class="flex items-top">
-                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-blue-500 text-white mr-3 text-[10px] px-2">1</span>
+                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-sky-500 text-white mr-3 text-[10px] px-2">1</span>
                     Answer a set of questions
                 </li>
                 <li class="flex items-top">
-                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-blue-500 text-white mr-3 text-[10px] px-2">2</span>
+                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-sky-500 text-white mr-3 text-[10px] px-2">2</span>
                     Our engine analyzes your answers, your profile, and over 1000 specialists' information.
                 </li>
                 <li class="flex items-top">
-                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-blue-500 text-white mr-3 text-[10px] px-2">3</span>
+                  <span class="w-5 h-5 flex items-center justify-center rounded-full bg-sky-500 text-white mr-3 text-[10px] px-2">3</span>
                     Get a shortlist and schedule your initial appointment
                 </li>
               </ol>

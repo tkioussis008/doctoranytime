@@ -67,9 +67,8 @@ onMounted(() => {
           v-for="option in question.Options"
           :class="[
             'w-full mb-2 px-4 py-2 rounded-md whitespace-normal break-words max-w-full',
-            checkboxGroup.includes(option.AnswerId) ? 'bg-blue-50' : ''
+            checkboxGroup.includes(option.AnswerId) ? 'bg-sky-50' : ''
           ]"
-          class="w-full mb-2 px-4 py-2 rounded-md"
           :key="option.AnswerId"
           :label="option.Answer"
           :value="option.AnswerId"       
@@ -88,7 +87,7 @@ onMounted(() => {
           v-for="option in question.Options"
           :class="[
             'w-full mb-2 px-4 py-2 rounded-md whitespace-normal break-words max-w-full',
-            optionGroup === option.AnswerId ? 'bg-blue-50' : ''
+            optionGroup === option.AnswerId ? 'bg-sky-50' : ''
           ]"
           :key="option.AnswerId"
           :label="option.Answer"
@@ -107,5 +106,9 @@ onMounted(() => {
 .el-radio__label, .el-checkbox__label {
   word-wrap: break-word;   
   white-space: normal !important;
+  color: black !important; 
+}
+.el-radio:last-child {
+  margin-right: 30px !important;
 }
 </style>

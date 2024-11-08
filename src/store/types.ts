@@ -6,6 +6,7 @@ export interface Option {
   GoToQuestionId?: number;
   FilterQueryStringKey?: string;
   FilterQueryStringValue?: string;
+  [key: string]: any;
 }
 
 export interface QuestionsResponse {
@@ -18,7 +19,7 @@ export interface QuestionsResponse {
 export interface Question {
   Id: number;
   Question: string;
-  QuestionSelectType: number; // 0 for checkbox, 1 for radio button
+  QuestionSelectType: number;
   IsOptional: boolean;
   Options: Option[];
 }

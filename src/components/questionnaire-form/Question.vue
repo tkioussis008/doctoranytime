@@ -22,22 +22,20 @@ const optionGroup = ref<number>()
 
 
 const handleCheckbox = (answerId: number[]) => {
-  console.log(answerId)
-
-  const selectedQuestion = store.questions?.find(q => q.Id === store.currentQuestionId)?.Options;
-  store.goToNextQuestionOrComplete( 
-    selectedQuestion?.find(ans => answerId?.includes(ans?.AnswerId)) || null 
-  );
-};
+  const selectedQuestion = store.questions?.find(q => q.Id === store.currentQuestionId)?.Options
+  store.storeAnswer( 
+    props.question.Id,
+    selectedQuestion?.filter(ans => answerId?.includes(ans?.AnswerId)) || null 
+  )
+}
 
 const handleOption = (answerId: number) => {
-  console.log(answerId)
-
-  const selectedQuestion = store.questions?.find(q => q.Id === store.currentQuestionId)?.Options;
-  store.goToNextQuestionOrComplete( 
+  const selectedQuestion = store.questions?.find(q => q.Id === store.currentQuestionId)?.Options
+  store.storeAnswer( 
+    props.question.Id,
     selectedQuestion?.find(ans => ans?.AnswerId === answerId) || null 
-  );
-};
+  )
+}
 
 </script>
 
@@ -45,7 +43,7 @@ const handleOption = (answerId: number) => {
 <template>
   <div>
     <span class="flex mb-10 font-bold">{{ question.Question }}</span>
-    <div v-if="question.QuestionSelectType === 0">
+    <div v-if="question.QuestionSelectType === 1">
       <el-checkbox-group 
         @update:model-value="handleCheckbox($event)"
         v-model="checkboxGroup"
@@ -67,7 +65,6 @@ const handleOption = (answerId: number) => {
       </el-checkbox-group>  
     </div>
     <div v-else>
-
       <el-radio-group 
         @update:model-value="handleOption($event)"
         v-model="optionGroup"

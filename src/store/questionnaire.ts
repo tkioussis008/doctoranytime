@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 
 import { ElNotification } from 'element-plus'
-import type { Option, QuestionsResponse, Question, State } from './types'
+import type { Option, QuestionsResponse, Question } from './types'
 
 
 export const useQuestionnaireStore = defineStore('questionnaireStore', 
@@ -11,17 +11,20 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     const questions = ref<Question[]>([])
     const currentQuestionId = ref<number | null>(null)
     const userAnswers = ref<Map<number, Option[] | Option>>(new Map())
+    const memoizedResults = ref<Map<number, boolean>>(new Map())
+    const saveResult = ref<Map<number, Option[] | Option | null>>(new Map())
     const loading = ref<boolean>(false)
     const error = ref<string | null>(null)
-
-    const memoizedResults = new Map<number, boolean>()
 
 
 
     const progress = computed(() => {
+      const remainingSteps = calculateMaxRemainingSteps(currentQuestionId.value || 1000)
+      const estimatedTotalSteps = remainingSteps + userAnswers.value.size
+      if (estimatedTotalSteps === 0) return 100
       return component.value !== 3 ? 
         questions.value.length
-          ? (userAnswers.value.size / questions.value.length) * 100
+          ? 100 - Math.round((remainingSteps / estimatedTotalSteps) * 100)
           : 0
         : 100
     })
@@ -77,47 +80,15 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
           currentQuestionId.value = data.Data.find(q => q.Id === 1000)?.Id || data.Data[0]?.Id
         }
       } catch (err) {
-        error.value = "Failed to fetch questions. Please try again."
+        component.value = 1
+        error.value = "Our Server is not responding. Please try again!"
+        ElNotification({
+          message: error.value,
+          type: 'error',
+        })
       } finally {
         loading.value = false
       }
-    }
-
-    const willAllBranchesLeadToUrl = (questionId: number, visitedQuestions: Set<number> = new Set()): boolean => {
-      // console.log(questionId, visitedQuestions)
-      if (memoizedResults.has(questionId)) {
-        return memoizedResults.get(questionId)!
-      }
-    
-      if (visitedQuestions.has(questionId)) {
-        return false
-      }
-      visitedQuestions.add(questionId)
-    
-      const question = questions.value.find(q => q.Id === questionId)
-      if (!question) {
-        memoizedResults.set(questionId, false)
-        return false
-      }
-    
-      for (const option of question.Options) {
-        if (option.Action === "GoToUrl") {
-          continue
-        } else if (option.Action === "GoToQuestion" && option.GoToQuestionId) {
-          // console.log('CALL', option.GoToQuestionId, visitedQuestions)
-          const allBranchesLeadToUrl = willAllBranchesLeadToUrl(option.GoToQuestionId, new Set(visitedQuestions))
-          if (!allBranchesLeadToUrl) {
-            memoizedResults.set(questionId, false)
-            return false
-          }
-        } else {
-          memoizedResults.set(questionId, false)
-          return false
-        }
-      }
-    
-      memoizedResults.set(questionId, true)
-      return true
     }
 
     const GoToComponent = (componentId: number) => {
@@ -126,11 +97,18 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
 
     const storeAnswer = (questionId: number, selectedOption: Option[] | Option | null) => {
       if(!selectedOption) return
-      updateOrAddQuestionEntry(questionId, selectedOption)   
+      saveResult.value.set(questionId, selectedOption)
     }
 
     const goToNextQuestionOrComplete = () => {
-      let nextQuestion = questions.value.find(q => q.Id === getLastQuestionValue('GoToQuestionId'))
+      if (!currentQuestionId.value) return;
+
+      const savedAnswer = saveResult.value.get(currentQuestionId.value);
+      if (savedAnswer) {
+        updateOrAddAnswerEntry(currentQuestionId.value, savedAnswer);
+      }
+
+      let nextQuestion = questions.value.find(q => q.Id === getLastAnswerValue('GoToQuestionId'))
       if(currentQuestionId.value && nextQuestion) {
         const currentQuestion = userAnswers.value.get(currentQuestionId.value)
         if(!currentQuestion) {
@@ -152,7 +130,7 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
             }
           }
         }
-        if(nextQuestion && nextQuestion.Id !== getLastQuestionValue('Id') && willAllBranchesLeadToUrl(nextQuestion.Id)) {
+        if(nextQuestion && nextQuestion.Id !== getLastAnswerValue('Id') && willAllAnswersLeadToFinalUrl(nextQuestion.Id)) {
           currentQuestionId.value = nextQuestion.Id
         } else {
           ElNotification({
@@ -160,45 +138,52 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
             type: 'error',
           })
         }
+      } else if(currentQuestionId.value === 1000) {
+        ElNotification({
+          message: 'Please Select An Answer',
+          type: 'warning',
+        })
       }
-      if(getLastQuestionValue('Action') === "GoToUrl") {
+      if(getLastAnswerValue('Action') === "GoToUrl") {
         GoToComponent(3)
       }
     }
 
     const goToPreviousQuestion = () => {
       if(userAnswers.value.size === 0) {
+        resetQuestionnaire()
         GoToComponent(1)
       } else {
-        popLastQuestionEntry()
-        currentQuestionId.value = getLastQuestionValue('GoToQuestionId') || 1000
+        popLastAnswerEntry()
       }
     }
 
-    const addQuestionEntry = (questionId: number, question: Option | Option[]) => {
+    const addAnswerEntry = (questionId: number, question: Option | Option[]) => {
       userAnswers.value.set(questionId, question)
     }
 
-    const updateOrAddQuestionEntry = (questionId: number, question: Option | Option[]) => {
+    const updateOrAddAnswerEntry = (questionId: number, question: Option | Option[]) => {
       if (userAnswers.value.has(questionId)) {
         userAnswers.value.set(questionId, question)
       } else {
-        addQuestionEntry(questionId, question)
+        addAnswerEntry(questionId, question)
       }
     }
 
-    const deleteQuestionEntry = (questionId: number) => {
+    const deleteAnswerEntry = (questionId: number) => {
       userAnswers.value.delete(questionId)
     }
 
-    const popLastQuestionEntry = () => {
+    const popLastAnswerEntry = () => {
       const lastKey = Array.from(userAnswers.value.keys()).pop()
       if (lastKey !== undefined) {
+        currentQuestionId.value = lastKey || 1000
         userAnswers.value.delete(lastKey)
+        saveResult.value.delete(lastKey)
       }
     }
 
-    const getLastQuestionValue = (property: keyof Option) => {
+    const getLastAnswerValue = (property: keyof Option) => {
       const lastEntry = Array.from(userAnswers.value.values()).pop()
       
       if (Array.isArray(lastEntry) && lastEntry.length > 0) {
@@ -210,25 +195,97 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
         return lastEntry[property]
       }
     
-      return undefined;
+      return undefined
     }
 
     const resetQuestionnaire = () => {
       userAnswers.value.clear()
+      memoizedResults.value.clear()
+      saveResult.value.clear()
       currentQuestionId.value = questions.value.length ? questions.value[0].Id : 1000
     }
 
     const serializeUserAnswers = (userAnswers: Map<number, Option | Option[]>) => {
       return JSON.stringify(Array.from(userAnswers.entries()))
-    };
+    }
+
+    const serializeMemoizedResults = (memoizedResults: Map<number, boolean>) => {
+      return JSON.stringify(Array.from(memoizedResults.entries()))
+    }
 
     const saveToLocalStorage = () => {
       localStorage.setItem('userAnswers', serializeUserAnswers(userAnswers.value))
-    };
+      localStorage.setItem('memoizedResults', serializeMemoizedResults(memoizedResults.value))
+    }
+
+    const calculateMaxRemainingSteps = (startQuestionId: number): number => {
+      const visitedQuestions = new Set<number>()
+      const questionQueue: Array<{ questionId: number, depth: number }> = []
+      let maxSteps = 0
+    
+      questionQueue.push({ questionId: startQuestionId, depth: 0 })
+    
+      while (questionQueue.length > 0) {
+        const { questionId, depth } = questionQueue.shift()!
+    
+        if(visitedQuestions.has(questionId)) continue
+        visitedQuestions.add(questionId)
+    
+        const question = questions.value.find(q => q.Id === questionId)
+        if(!question) continue
+    
+        maxSteps = Math.max(maxSteps, depth)
+    
+        for (const option of question.Options) {
+          if (option.Action === "GoToUrl") {
+            continue
+          } else if (option.Action === "GoToQuestion" && option.GoToQuestionId) {
+            questionQueue.push({ questionId: option.GoToQuestionId, depth: depth + 1 })
+          }
+        }
+      }
+    
+      return maxSteps
+    }
+
+    const willAllAnswersLeadToFinalUrl = (questionId: number, visitedQuestions: Set<number> = new Set()): boolean => {
+      if (memoizedResults.value.has(questionId)) {
+        return memoizedResults.value.get(questionId)!
+      }
+    
+      if (visitedQuestions.has(questionId)) {
+        return false
+      }
+      visitedQuestions.add(questionId)
+    
+      const question = questions.value.find(q => q.Id === questionId)
+      if (!question) {
+        memoizedResults.value.set(questionId, false)
+        return false
+      }
+    
+      for (const option of question.Options) {
+        if (option.Action === "GoToUrl") {
+          continue
+        } else if (option.Action === "GoToQuestion" && option.GoToQuestionId) {
+          const allBranchesLeadToUrl = willAllAnswersLeadToFinalUrl(option.GoToQuestionId, new Set(visitedQuestions))
+          if (!allBranchesLeadToUrl) {
+            memoizedResults.value.set(questionId, false)
+            return false
+          }
+        } else {
+          memoizedResults.value.set(questionId, false)
+          return false
+        }
+      }
+    
+      memoizedResults.value.set(questionId, true)
+      return true
+    }
 
 
 
-    // Save userAnswers to localStorage on change because piniaPluginPersistedstate not storing Map keyed data items
+    // Save userAnswers and memoizedResults to localStorage on change because piniaPluginPersistedstate not storing Map keyed data items
     watch(() => userAnswers.value, saveToLocalStorage, { deep: true })
 
 
@@ -255,9 +312,14 @@ export const useQuestionnaireStore = defineStore('questionnaireStore',
     persist: {
       afterHydrate: (ctx) => {
         const storedData = localStorage.getItem('userAnswers')
+        const storedData2 = localStorage.getItem('memoizedResults')
         if (storedData) {
           const parsedData = JSON.parse(storedData)
           ctx.store.userAnswers = new Map(parsedData)
+        }
+        if (storedData2) {
+          const parsedData = JSON.parse(storedData2)
+          ctx.store.memoizedResults = new Map(parsedData)
         }
       }
     },

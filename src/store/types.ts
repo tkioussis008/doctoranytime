@@ -23,11 +23,3 @@ export interface Question {
   IsOptional: boolean;
   Options: Option[];
 }
-
-export interface State {
-  questions: Question[];
-  currentQuestionId: number | null;
-  userAnswers: Option[];
-  loading: boolean;
-  error: string | null;
-}

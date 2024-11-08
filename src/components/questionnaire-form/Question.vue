@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue"
 import type { Question } from '@/store/types'
 
-import { useQuestionnaireStore } from '@/store/questionnaire';
-import { onMounted } from 'vue';
+import { useQuestionnaireStore } from '@/store/questionnaire'
 
 
 const store = useQuestionnaireStore();
@@ -36,6 +35,20 @@ const handleOption = (answerId: number) => {
     selectedQuestion?.find(ans => ans?.AnswerId === answerId) || null 
   )
 }
+
+const initializeSelection = () => {
+  const storedAnswer = store.userAnswers.get(props.question.Id)
+  if (Array.isArray(storedAnswer)) {
+    checkboxGroup.value = storedAnswer.map((opt) => opt.AnswerId)
+  } else if (storedAnswer) {
+    optionGroup.value = storedAnswer.AnswerId
+  }
+}
+
+
+onMounted(() => {
+  initializeSelection()
+})
 
 </script>
 

@@ -1,0 +1,15 @@
+.question-container {
+    padding-bottom: 144px !important;  
+}
+
+.intro-container {
+    @media (max-width: 900px) {
+        padding-bottom: 144px !important;
+    }
+}
+
+.steps {
+    @media (max-width: 900px) {
+        margin-top: 7rem !important;
+    }
+}

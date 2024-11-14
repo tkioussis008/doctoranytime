@@ -14,7 +14,7 @@ import { faClock } from '@fortawesome/free-regular-svg-icons'
     
       <img src="@/assets/images/central-image.png" class="md:max-w-xl max-w-sm mb-8" alt="MindTime Central Image" />
       
-        <div class="space-y-6 py-8 text-base text-gray-500 leading-7 text-center">
+        <div class="intro-container space-y-6 py-8 text-base text-gray-500 leading-7 text-center">
           <h1 class="text-indigo-800 text-3xl font-bold">Get matched with Top Mental Health Specialists</h1>
           <div> 
             <p class="bg-emerald-50 text-emerald-500 px-2 py-1 text-xs text-center rounded inline-block inline-flex items-center">

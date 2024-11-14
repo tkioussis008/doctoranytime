@@ -21,7 +21,7 @@ const currentComponent = computed(() => components[store.component] || 1)
 
 
 <template>
-  <div class="min-h-20 mt-20">
+  <div class="min-h-20 mt-20 steps">
     <component :is="currentComponent" />
   </div>
 </template>

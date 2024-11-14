@@ -103,7 +103,17 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+.el-radio.el-radio--large {
+    @media (max-width: 900px) {
+      height: auto;
+    }
+    line-height: 20px;
+}
 .el-radio__label, .el-checkbox__label {
+  @media (max-width: 900px) {
+    padding: 7px;
+    margin: 0 auto;
+  }
   word-wrap: break-word;   
   white-space: normal !important;
   color: black !important; 
